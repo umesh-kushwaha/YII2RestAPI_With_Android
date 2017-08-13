@@ -53,8 +53,14 @@ class UsersController extends Controller
                 Constant::MESSAGE=> 'User record is successfully ADDED', 
                 Constant::USER=>$user);
        }else{
+           $errors = $user->getErrors();
+           $message='';
+           foreach ($errors as $value) {
+               $message = $message.$value[0];
+           }
+         
            return array(Constant::STATUS_CODE=>'200', Constant::STATUS => FALSE,
-                Constant::MESSAGE=> $user->getErrors(), Constant::USER=>''); 
+                Constant::MESSAGE=> $message, Constant::USER=>''); 
        }
     }
     
