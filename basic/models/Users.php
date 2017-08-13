@@ -42,7 +42,10 @@ class Users extends \yii\db\ActiveRecord
             [['username', 'password', 'secret_key', 'role_id'], 'required'],
             [['username', 'password', 'secret_key', 'user_device_id', 'email', 'registered_date', 'last_logged_in', 'notification_token'], 'string'],
             [['role_id', 'is_active', 'mobile'], 'integer'],
-        ];
+            [['mobile'],'string','min'=>10],
+	    [['mobile'],'string','max'=>10],
+            [['username'], 'unique'],
+         ];
     }
 
     /**
@@ -87,5 +90,9 @@ class Users extends \yii\db\ActiveRecord
         }else{
             return FALSE;
         }
+    }
+    
+    public function getCurrentTimeInMili(){
+        return strval(time()*1000);
     }
 }

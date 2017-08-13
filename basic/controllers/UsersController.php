@@ -6,6 +6,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use app\models\Users;
 use app\common\Constant;
+use yii\db\Expression;
 class UsersController extends Controller
 {
     public $enableCsrfValidation = false;
@@ -39,11 +40,16 @@ class UsersController extends Controller
         $user->scenario = Users::SCENARIO_CREATE;
         $user->attributes = \yii::$app->request->post();
         $user->password = Yii::$app->getSecurity()->generatePasswordHash($user->password);
+        $user->secret_key = Yii::$app->getSecurity()->generatePasswordHash($user->getCurrentTimeInMili());
 
        if($user->validate()){
+            $user->registered_date = $user->getCurrentTimeInMili();
+            $user->last_logged_in = $user->getCurrentTimeInMili();
+            $user->is_active     = 1;
+
             $user->save();
             return array(Constant::STATUS_CODE=>'200', Constant::STATUS => TRUE,
-                Constant::MESSAGE=> 'User record is successfully ADDED', Constant::DATA=>'');
+                Constant::MESSAGE=> 'User record is successfully ADDED', Constant::DATA=>$user);
        }else{
            return array(Constant::STATUS_CODE=>'200', Constant::STATUS => FALSE,
                 Constant::MESSAGE=> $user->getErrors(), Constant::DATA=>'');
