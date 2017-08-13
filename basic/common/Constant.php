@@ -18,5 +18,6 @@ class Constant {
     const STATUS_CODE = 'status_code';
     const MESSAGE = 'message';
     const DATA    = 'data';
-            
+    const USER   = 'user';
+
 }

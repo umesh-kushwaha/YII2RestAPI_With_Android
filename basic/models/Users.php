@@ -44,7 +44,7 @@ class Users extends \yii\db\ActiveRecord
             [['role_id', 'is_active', 'mobile'], 'integer'],
             [['mobile'],'string','min'=>10],
 	    [['mobile'],'string','max'=>10],
-            [['username'], 'unique'],
+            [['username'], 'unique','on'=>'create'],
          ];
     }
 
@@ -92,6 +92,10 @@ class Users extends \yii\db\ActiveRecord
         }
     }
     
+    public function getUserByName($username){
+        return Users::findOne(['username' => $username]);
+    }
+
     public function getCurrentTimeInMili(){
         return strval(time()*1000);
     }
