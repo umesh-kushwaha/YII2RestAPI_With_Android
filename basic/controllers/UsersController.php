@@ -30,7 +30,8 @@ class UsersController extends Controller
     
     public function actionIndex()
     {
-        echo 'testing';        exit();
+        echo json_encode(array(Constant::STATUS_CODE=>200, Constant::STATUS => FALSE,
+                Constant::MESSAGE=> '$message', Constant::USER=>new Users()));        exit();
         return $this->render('index');
     }
 
@@ -49,7 +50,7 @@ class UsersController extends Controller
             
             $user->secret_key = '';
             $user->password = '';
-            return array(Constant::STATUS_CODE=>'200', Constant::STATUS => TRUE,
+            return array(Constant::STATUS_CODE=>200, Constant::STATUS => TRUE,
                 Constant::MESSAGE=> 'User record is successfully ADDED', 
                 Constant::USER=>$user);
        }else{
@@ -59,15 +60,15 @@ class UsersController extends Controller
                $message = $message.$value[0];
            }
          
-           return array(Constant::STATUS_CODE=>'200', Constant::STATUS => FALSE,
-                Constant::MESSAGE=> $message, Constant::USER=>''); 
+           return array(Constant::STATUS_CODE=>200, Constant::STATUS => FALSE,
+                Constant::MESSAGE=> $message, Constant::USER=>new Users()); 
        }
     }
     
     public function actionLogin(){
         $user = new Users();
         $user->scenario = Users::SCENARIO_LOGIN;
-        $user->attributes = Yii::$app->request->post();
+        $user->attributes = json_decode(Yii::$app->getRequest()->getRawBody(),true);
         
        if($user->validate() && $user->hasUser($user->username, $user->password)){
            $user = $user->getUserByName($user->username);
@@ -75,12 +76,12 @@ class UsersController extends Controller
            $user->save();
            $user->secret_key = '';
            $user->password = '';
-           return array(Constant::STATUS_CODE=>'200', Constant::STATUS => TRUE,
+           return array(Constant::STATUS_CODE=>200, Constant::STATUS => TRUE,
                 Constant::MESSAGE=> 'Logedin successfully', Constant::USER=>$user);
            
        }else{
-           return array(Constant::STATUS_CODE=>'200', Constant::STATUS => FALSE,
-                Constant::MESSAGE=> 'User name or password is wrong.', Constant::USER=>'');
+           return array(Constant::STATUS_CODE=>200, Constant::STATUS => FALSE,
+                Constant::MESSAGE=> 'User name or password is wrong.', Constant::USER=>new Users());
        }
     }
     
